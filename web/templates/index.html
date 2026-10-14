@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calidad del Vino</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M9 3h14c0 8-2 13-7 13S9 11 9 3z' fill='%237a1f3d'/%3E%3Cpath d='M16 16v10M11 28h10' stroke='%237a1f3d' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            background: #fdfbfa;
+            color: #2e1d24;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .contenedor {
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+            min-height: 100vh;
+        }
+
+        /* ---------- IZQUIERDA: FORMULARIO ---------- */
+        .formulario {
+            padding: 56px 64px;
+            max-width: 720px;
+            margin-left: auto;
+            width: 100%;
+        }
+
+        .marca {
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #a07884;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-family: Georgia, "Times New Roman", serif;
+            font-weight: normal;
+            font-size: 38px;
+            line-height: 1.15;
+            color: #5c1730;
+            margin-bottom: 12px;
+        }
+
+        .descripcion {
+            color: #74606a;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .ejemplos {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 28px;
+            font-size: 13px;
+            color: #a07884;
+        }
+
+        .ejemplos button {
+            padding: 6px 12px;
+            border: 1px solid #ecdde2;
+            border-radius: 999px;
+            background: transparent;
+            color: #7a1f3d;
+            font: inherit;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+
+        .ejemplos button:hover { background: #f8eef1; border-color: #d4b6c0; }
+
+        .campos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .chip {
+            display: inline-block;
+            margin-bottom: 14px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(122, 31, 61, 0.08);
+            color: #5c1730;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: #5b4851;
+            margin-bottom: 6px;
+        }
+
+        label span { color: #a8949c; }
+
+        .tipo-selector {
+            margin-bottom: 20px;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e6d9de;
+            border-radius: 8px;
+            background: #fff;
+            color: #2e1d24;
+            font: inherit;
+            font-size: 15px;
+            font-variant-numeric: tabular-nums;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        select:focus,
+        input:focus {
+            outline: none;
+            border-color: #9b3a5a;
+            box-shadow: 0 0 0 3px rgba(155, 58, 90, 0.15);
+        }
+
+        .acciones {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .boton {
+            padding: 13px 28px;
+            border: none;
+            border-radius: 8px;
+            background: #7a1f3d;
+            color: #fff;
+            font: inherit;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .boton:hover { background: #5c1730; }
+
+        .boton-secundario {
+            background: #f1e7ea;
+            color: #5c1730;
+        }
+
+        .boton-secundario:hover { background: #e8dce1; }
+
+        .error {
+            margin-bottom: 20px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            background: #fdecec;
+            color: #9b2c2c;
+            font-size: 14px;
+        }
+
+        /* ---------- DERECHA: RESULTADO ---------- */
+        .resultado {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 56px 48px;
+            background: #f6eef0;
+            text-align: center;
+        }
+
+        .resultado.alta { background: #f3ead6; }
+        .resultado.baja { background: #eeeaec; }
+
+        .resultado-content {
+            width: min(100%, 360px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .copa {
+            width: 120px;
+            height: 160px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .etiqueta {
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #8f7a83;
+            margin-bottom: 10px;
+        }
+
+        .veredicto {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 34px;
+            line-height: 1.2;
+            color: #5c1730;
+            margin-bottom: 14px;
+        }
+
+        .alta .veredicto { color: #7a5a12; }
+        .baja .veredicto { color: #4f454a; }
+
+        .confianza { font-size: 14px; color: #74606a; max-width: 300px; line-height: 1.6; }
+
+        .barra {
+            width: 100%;
+            height: 8px;
+            margin: 18px auto 0;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .barra div { height: 100%; border-radius: 999px; background: currentColor; }
+        .alta .barra { color: #b8891f; }
+        .baja .barra { color: #8a7d83; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .stat {
+            padding: 12px 8px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.35);
+            border: 1px solid rgba(92, 23, 48, 0.08);
+        }
+
+        .stat span {
+            display: block;
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #8b6d78;
+            margin-bottom: 4px;
+        }
+
+        .stat strong {
+            font-size: 15px;
+            color: #3c2c32;
+        }
+
+        .insights {
+            list-style: none;
+            margin-top: 18px;
+            padding: 0;
+            display: grid;
+            gap: 10px;
+            text-align: left;
+        }
+
+        .insights li {
+            position: relative;
+            padding: 10px 12px 10px 28px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.24);
+            color: #4d3940;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .insights li::before {
+            content: '✓';
+            position: absolute;
+            left: 12px;
+            top: 8px;
+            color: #7a1f3d;
+            font-weight: 700;
+        }
+
+        @media (max-width: 900px) {
+            .contenedor { grid-template-columns: 1fr; }
+            .formulario { padding: 40px 16px; margin: 0; max-width: none; }
+            .resultado { padding: 40px 16px; }
+        }
+    </style>
+</head>
+<body>
+<div class="contenedor">
+    <main class="formulario">
+        <p class="marca">Wine Quality · UCI</p>
+        <h1>¿Este vino es de alta calidad?</h1>
+        <p class="descripcion">Escribe las 11 medidas fisicoquímicas del vino y un modelo Random Forest, entrenado con 6,497 vinos tintos y blancos, te dirá si es de alta calidad (calificación de 7 o más) o de baja calidad.</p>
+
+        {% if error %}<p class="error">{{ error }}</p>{% endif %}
+
+        <form action="/predecir" method="POST">
+            <div class="tipo-selector">
+                <label for="tipo">Tipo de vino</label>
+                <select id="tipo" name="tipo">
+                    {% for opcion in tipos %}
+                    <option value="{{ opcion }}" {% if opcion == tipo %}selected{% endif %}>{{ opcion }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="campos">
+                {% for columna, etiqueta, unidad in campos %}
+                <div>
+                    <label for="{{ columna }}">{{ etiqueta }} {% if unidad %}<span>({{ unidad }})</span>{% endif %}</label>
+                    <input type="number" step="any" min="0" id="{{ columna }}" name="{{ columna }}" value="{{ valores.get(columna, '') }}" required>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="acciones">
+                <button class="boton" type="submit">Clasificar vino</button>
+                <button class="boton boton-secundario" type="reset">Limpiar datos</button>
+            </div>
+        </form>
+    </main>
+
+    <aside class="resultado {{ prediccion or '' }}">
+        <div class="resultado-content">
+            <svg class="copa" viewBox="0 0 120 160" fill="none" aria-hidden="true">
+                <path d="M41 12h38l-7 52c-1.2 12-9 18-17 18s-15.8-6-17-18L41 12Z" stroke="#5c1730" stroke-width="3" stroke-linejoin="round"/>
+                {% if prediccion %}
+                <path d="M46 22h28l-5 37c-.9 9-6.1 14-14 14s-13.1-5-14-14L46 22Z" fill="{{ '#b8891f' if prediccion == 'alta' else '#8a7d83' }}" opacity="0.9"/>
+                {% endif %}
+                <path d="M30 90h60M50 90v32M70 90v32M42 122h36" stroke="#5c1730" stroke-width="3" stroke-linecap="round"/>
+                <path d="M28 102h64" stroke="#5c1730" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+            {% if prediccion %}
+                <span class="chip">{{ tipo }}</span>
+                <p class="etiqueta">Resultado</p>
+                <p class="veredicto">Vino de {{ prediccion }} calidad</p>
+                <p class="confianza">El modelo está {{ probabilidad }}% seguro de esta respuesta.</p>
+                <div class="barra"><div style="width: {{ probabilidad }}%"></div></div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <span>Alcohol</span>
+                        <strong>{{ valores.get('alcohol', '') }}%</strong>
+                    </div>
+                    <div class="stat">
+                        <span>pH</span>
+                        <strong>{{ valores.get('ph', '') }}</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Densidad</span>
+                        <strong>{{ valores.get('densidad', '') }}</strong>
+                    </div>
+                </div>
+
+                <ul class="insights">
+                    {% for insight in insights %}
+                    <li>{{ insight }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="etiqueta">Resultado</p>
+                <p class="confianza">Completa el formulario para ver el pronóstico y un resumen útil del vino.</p>
+            {% endif %}
+        </div>
+    </aside>
+</div>
+
+
+</body>
+</html>
